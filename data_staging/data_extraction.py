@@ -40,21 +40,3 @@ filtered_video_df_with_comments = filtered_video_df.apply(lambda x: get_paragrap
 filtered_video_df_with_comments.to_csv(FILTERED_DATA_DIR+os.sep+"qna_data"+os.sep+CHANNEL+"_video_qna_data.csv",index=False)
 
 ######################
-
-
-def get_answers(row):
-    query = row['question']
-    if not query.endswith('?'):
-        query = query + '?'
-    # Sending a question to the pipeline and getting prediction
-    predictions = cdqa_pipeline.predict(query=query,n_predictions=3)
-    for i,prediction in enumerate(predictions):
-        prediction = list(prediction)
-        if prediction[2] in long_answers_dict.keys():
-            prediction[0] = long_answers_dict[prediction[2]]
-            prediction[2] = prediction[0]
-        row['answer_'+str(i+1)] = prediction[0]
-    return row
-
-
-question_df_answers = question_df.progress_apply(lambda x: get_answers(x), axis=1)
