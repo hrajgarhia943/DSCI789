@@ -1,11 +1,18 @@
+import os
+import sys
+import pandas as pd
+from ast import literal_eval
+cur_wd = os.getcwd()
+sys.path.insert(0,'bertqa')
+
 
 from cdqa.pipeline.cdqa_sklearn import QAPipeline
 from cdqa.utils.filters import filter_paragraphs
-import os
 
-
-cur_path = os.path.dirname(os.path.abspath(__file__))
-reader_path = os.path.join(cur_path,'models/bert_qa.joblib')
+CHANNEL = "fox"
+DATA_DIR = "/Users/harshitrajgarhia/PycharmProjects/DSCI789/data/"
+FILTERED_DATA_DIR = DATA_DIR+ os.sep + "filtered_data"
+reader_path = os.path.join(cur_wd,'bertqa/models/bert_qa.joblib')
 
 
 def fetch_cdqa_pipeline(reader_path):
@@ -13,8 +20,9 @@ def fetch_cdqa_pipeline(reader_path):
     return cdqa_pipeline
 
 def build_knowledge_base(ip_path):
-    df = pd.read_csv(ip_path, converters={'paragraphs': literal_eval})
-    df = filter_paragraphs(df)
+    filename = ip_path+os.sep+"qna_data"+os.sep+CHANNEL+"_video_qna_data.csv"
+    df = pd.read_csv(filename, converters={'paragraphs': literal_eval})
+    #df = filter_paragraphs(df)
     return df
 
 
@@ -39,9 +47,9 @@ def get_answer(df,cdqa_pipeline, query,num_answers):
 
 if __name__=='__main__':
     cdqa_pipeline = fetch_cdqa_pipeline(reader_path)
-    df = build_knowledge_base('../../data')
+    df = build_knowledge_base(FILTERED_DATA_DIR)
     #get_answer(df,cdqa_pipeline,'who has been affected by the coronovirus in indian army',3)
-    get_answer(df,cdqa_pipeline,'what do we analyse to carry out our mission To carry out our mission?',3)
+    a = get_answer(df,cdqa_pipeline,'When does life starts?',10)
 
 
 
@@ -49,7 +57,6 @@ if __name__=='__main__':
 '''
 import os
 import pandas as pd
-from ast import literal_eval
 
 from cdqa.utils.filters import filter_paragraphs
 from cdqa.pipeline import QAPipeline

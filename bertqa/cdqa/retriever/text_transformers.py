@@ -150,7 +150,7 @@ class BM25Transformer(BaseEstimator, TransformerMixin):
                 )
 
             if self.use_idf:
-                check_is_fitted(self, "_idf_diag", "idf vector is not fitted")
+                check_is_fitted(self, "_idf_diag")
                 X = sp.csr_matrix(X.toarray() * self._idf_diag.diagonal())
 
             return X
