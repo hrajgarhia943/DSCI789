@@ -2,14 +2,13 @@ import os
 import pandas as pd
 import numpy as np
 
-
 def filter_paragraphs(
     articles,
     drop_empty=True,
     read_threshold=1000,
     public_data=True,
-    min_length=50,
-    max_length=300,
+    min_length=30,
+    max_length=512,
 ):
     """
     Cleans the paragraphs and filters them regarding their length
@@ -64,3 +63,6 @@ def filter_paragraphs(
         articles = articles.dropna(subset=["paragraphs"]).reset_index(drop=True)
 
     return articles
+
+
+

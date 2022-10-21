@@ -14,14 +14,31 @@ DATA_DIR = "/Users/harshitrajgarhia/PycharmProjects/DSCI789/data"
 FILTERED_DATA_DIR = DATA_DIR + os.sep + "filtered_data"
 
 
+def make_paragraphs(articles,min_like_count=2,min_reply_count=0):
+    def filter_paragraphs_on_likes_and_replies_count(row,min_like_count=min_like_count,min_reply_count=min_reply_count):
+        paragraphs_data_list = row['paragraphs_data']
+        paragraphs_list = [paragraph_data['text'] for paragraph_data in paragraphs_data_list
+                           if paragraph_data['likes_count'] >= min_like_count
+                           and paragraph_data['reply_count'] >= min_reply_count]
+
+        row["paragraphs"] = paragraphs_list
+        return row
+
+
+    articles =  articles.apply(lambda x: filter_paragraphs_on_likes_and_replies_count(x,min_like_count,min_reply_count), axis=1)
+    return articles
+
 def fetch_cdqa_pipeline(reader_path):
     cdqa_pipeline = QAPipeline(reader=reader_path)
     return cdqa_pipeline
 
 def build_knowledge_base(channel,ip_path):
-    filename = ip_path+os.sep+"qna_data"+os.sep+channel+"_video_qna_data.csv"
-    df = pd.read_csv(filename, converters={'paragraphs': literal_eval})
-    #df = filter_paragraphs(df)
+    filename = ip_path + os.sep + "qna_data" + os.sep + channel + "_video_qna_data.csv"
+    df = pd.read_csv(filename, converters={'paragraphs_data': literal_eval})
+    df['count_before']  = df.paragraphs_data.str.len()
+    df = make_paragraphs(df)
+    df['count_after']  = df.paragraphs.str.len()
+    df = filter_paragraphs(df)
     return df
 
 
@@ -79,10 +96,21 @@ if __name__=='__main__':
     a = get_answer(df,cdqa_pipeline,'When does life starts?',10)
     '''
 
-    questions_list = ["When does life starts?", "Is Abortion a murder?"]
+    questions_list = ["When does life start?",
+                      "Is Abortion a murder?",
+                      "is abortion legal?",
+                      "is abortion against the law?",
+                      "is abortion a fundamental right to a woman?",
+                     ]
+
     result_df = get_answers_across_channels(questions_list, 5)
     answers_columns = [column for column in result_df.columns if 'answer' in column or 'query' in column]
     result_df_answers = result_df[answers_columns]
-    result_df_answers.to_csv(FILTERED_DATA_DIR+os.sep+"qna_results"+os.sep+"qna_results_across_channels.csv",index=False)
-    result_df.to_csv(FILTERED_DATA_DIR+os.sep+"qna_results"+os.sep+"qna_results_across_channels_metadata.csv",index=False)
+    # result_df_answers.to_csv(FILTERED_DATA_DIR+os.sep+"qna_results"+os.sep+"qna_results_across_channels.csv",index=False)
+    # result_df.to_csv(FILTERED_DATA_DIR+os.sep+"qna_results"+os.sep+"qna_results_across_channels_metadata.csv",index=False)
 
+# is abortion legal?
+# is abortion against the constitution/law?
+# is abortion a fundamental right to an American?
+# is abortion be treated a healthcare?
+# is obortion a RIGHT TO women?
