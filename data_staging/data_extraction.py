@@ -22,17 +22,15 @@ def get_paragraphs(row):
     video_id = row['id']
     #video_id = 'CuhMGxOPxR4'
     print("******************* "+video_id)
-    video_comments_list = []
-    video_id_list_with_no_comments = []
-    video_comments_list_id = []
-    video_comments_list_text = []
+    # video_comments_list = []
+    # video_comments_list_id = []
+    # video_comments_list_text = []
     comments_dir_list = []
+    video_id_list_with_no_comments = []
     try:
         video_metadata = pd.read_csv(METADATA_DIR + os.sep + video_id + "_metadata.csv")
         comment_like_count_dict = dict(video_metadata[['commentId', 'likeCount']].values)
         comment_reply_count_dict = dict(video_metadata[['commentId', 'totalReplyCount']].values)
-
-
 
         with open(JSON_BY_LINE_DIR + os.sep + video_id + "_jsonbyline.txt",'rb') as f:
             for line in f:

@@ -8,7 +8,7 @@ def filter_paragraphs(
     read_threshold=1000,
     public_data=True,
     min_length=30,
-    max_length=512,
+    max_length=300,
 ):
     """
     Cleans the paragraphs and filters them regarding their length

@@ -14,7 +14,7 @@ DATA_DIR = "/Users/harshitrajgarhia/PycharmProjects/DSCI789/data"
 FILTERED_DATA_DIR = DATA_DIR + os.sep + "filtered_data"
 
 
-def make_paragraphs(articles,min_like_count=2,min_reply_count=0):
+def make_paragraphs(articles,min_like_count=0,min_reply_count=0):
     def filter_paragraphs_on_likes_and_replies_count(row,min_like_count=min_like_count,min_reply_count=min_reply_count):
         paragraphs_data_list = row['paragraphs_data']
         paragraphs_list = [paragraph_data['text'] for paragraph_data in paragraphs_data_list
